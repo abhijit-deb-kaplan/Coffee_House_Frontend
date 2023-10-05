@@ -1,59 +1,107 @@
-import { Component } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Output,
+  ViewEncapsulation,
+} from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import {FormControl, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NgIf} from '@angular/common';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatIconModule} from '@angular/material/icon';
-import {MatButtonModule} from '@angular/material/button';
-import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import { HttpClient } from '@angular/common/http';
+import {
+  FormControl,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+  FormGroup,
+  AbstractControl,
+} from '@angular/forms';
 import { UserApiService } from '../../services/users/user-api.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { SnackbarService } from '../../services/snackbar/snackbar.service';
+import { UserLoginResponse } from '../../interfaces/users.interface';
 
 @Component({
   selector: 'app-login-dialog',
   templateUrl: './login-dialog.component.html',
   styleUrls: ['./login-dialog.component.scss'],
-  standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule, NgIf, MatIconModule, MatButtonModule, MatSnackBarModule,MatProgressSpinnerModule],
+  encapsulation: ViewEncapsulation.None,
 })
 export class LoginDialogComponent {
-  email = new FormControl('', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]);
-  password = new FormControl('', [Validators.required]); 
-  hide = true;
+  @Output() loginSuccess = new EventEmitter<UserLoginResponse['user']>();
+
+  loginForm: FormGroup = new FormGroup({
+    email: new FormControl(null, [Validators.required, Validators.email]),
+    password: new FormControl(null, [Validators.required]),
+  });
+  hidePassword = true;
   loading = false;
 
-  
-  constructor(public dialogRef: MatDialogRef<LoginDialogComponent>, private http: HttpClient, private apiService: UserApiService, private snackBar: MatSnackBar) {}
-  
+  constructor(
+    public dialogRef: MatDialogRef<LoginDialogComponent>,
+    private apiService: UserApiService,
+    private customSnackbar: SnackbarService
+  ) {}
 
-  getErrorMessage(control: FormControl): string {
+  getErrorMessage(control: AbstractControl): string {
     if (control.hasError('required')) {
       return `${this.getFieldName(control)} is required`;
     }
-  
+
     return control.hasError('pattern') ? 'Not a valid email' : '';
   }
 
-  getFieldName(control: FormControl): string {
+  getFieldName(control: AbstractControl): string {
     switch (control) {
-      case this.email:
-        return 'Email'
-      case this.password:
-        return 'Password'
+      case this.loginForm.get('email'):
+        return 'Email';
+      case this.loginForm.get('password'):
+        return 'Password';
       default:
         return 'Field';
     }
   }
-  
 
   login(): void {
-    this.dialogRef.close();
+    if (this.loginForm.invalid) {
+      this.customSnackbar.openErrorSnackbar(
+        'Please fill in both email and password',
+        'Close'
+      );
+      return;
+    }
+
+    this.loading = true;
+
+
+    this.apiService.login(this.loginForm.value).subscribe(
+      (response: UserLoginResponse) => {
+        this.customSnackbar.openSuccessSnackbar('Login successful!', 'Close');
+        this.loading = false;
+        this.apiService.onSuccessfulLogin(response.user);
+        this.loginSuccess.emit(response.user);
+
+        this.dialogRef.close({
+          name: 'dummy',
+          passowrd: 'fake-pass',
+        });
+      },
+
+      (error: HttpErrorResponse) => {
+        this.loading = false;
+        if (error.status === 0) {
+          this.customSnackbar.openErrorSnackbar(
+            'Server is busy. Please try again later',
+            'Close'
+          );
+        } else {
+          this.customSnackbar.openErrorSnackbar(
+            'Login failed! Invalid credentials',
+            'Close'
+          );
+        }
+      }
+    );
   }
 
   closeDialog(): void {
     this.dialogRef.close();
   }
-
 }

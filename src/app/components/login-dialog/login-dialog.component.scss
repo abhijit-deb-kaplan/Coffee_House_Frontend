@@ -16,7 +16,7 @@
       font-weight: bold;
       margin-left: 18px;
     }
-  
+
     &__cross {
       font-weight: lighter;
       margin-right: 10px;
@@ -24,11 +24,21 @@
     }
   }
 
-  &__form-field {
+  &__form {
+    width: 100%;
     display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__form-field {
     width: 90%;
-    margin: auto;
     margin-bottom: 15px;
+    .mat-mdc-form-field-subscript-wrapper {
+      .mat-mdc-form-field-error-wrapper {
+        padding: 0;
+      }
+    }
   }
 
   &__buttons {
@@ -45,13 +55,10 @@
 
     & .login__login-button {
       padding: 10px 20px;
-      background-color: #4A2E0D;
+      background-color: #4a2e0d;
       color: white;
       border-radius: 5px;
       font-weight: bold;
     }
-  }
-  &__error {
-    margin-left: -17px;
   }
 }

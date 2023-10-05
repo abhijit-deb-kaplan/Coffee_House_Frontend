@@ -1,45 +1,106 @@
 <div class="signup">
-
   <div class="signup__heading">
     <p class="title">Sign Up</p>
-    <mat-icon class="signup__close-button" (click)="closeDialog()">close</mat-icon>
+    <mat-icon class="signup__close-button" (click)="closeDialog()"
+      >close</mat-icon
+    >
   </div>
 
-  <mat-form-field class="signup__form-field">
-    <mat-label>First Name</mat-label>
-    <input class="signup__input" [formControl]="firstName" matInput placeholder="First Name">
-    <mat-error class="signup__error" *ngIf="firstName.invalid">{{getErrorMessage(firstName)}}</mat-error>
-  </mat-form-field>
-   
-  <mat-form-field class="signup__form-field">
-    <mat-label>Last Name</mat-label>
-    <input class="signup__input" [formControl]="lastName" matInput placeholder="Last Name">
-    <mat-error class="signup__error" *ngIf="lastName.invalid">{{getErrorMessage(lastName)}}</mat-error>
-  </mat-form-field>
-  
-  <mat-form-field class="signup__form-field">
-    <mat-label>Enter your email</mat-label>
-    <input class="signup__input" matInput placeholder="abc@xyz.com" [formControl]="email" required>
-    <mat-error class="signup__error" *ngIf="email.invalid">{{getErrorMessage(email)}}</mat-error>
-  </mat-form-field>
-  
-  <mat-form-field class="signup__form-field">
-    <mat-label>Enter your password</mat-label>
-    <input class="signup__input" matInput [formControl]="password" [type]="hide ? 'password' : 'text'">
-    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-      <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-    </button>
-    <mat-error class="signup__error" *ngIf="password.invalid">{{getErrorMessage(password)}}</mat-error>
-  </mat-form-field>
-  
+  <form [formGroup]="signupForm" (ngSubmit)="signup()" class="signup__form">
+    <mat-form-field class="signup__form-field">
+      <mat-label>First Name</mat-label>
+      <input
+        class="signup__input"
+        formControlName="firstName"
+        matInput
+        placeholder="First Name"
+      />
+      <mat-error
+        class="signup__error"
+        *ngIf="signupForm.get('firstName').invalid"
+        >{{ getErrorMessage(signupForm.get("firstName")) }}</mat-error
+      >
+    </mat-form-field>
 
-  <div class="signup__buttons">
-    <button mat-raised-button class="signup__close-button" (click)="closeDialog()">Cancel</button>
-    <button mat-raised-button class="signup__signup-button" (click)="signup()" [disabled]="loading || !areAllFieldsFilled()">
-      <span *ngIf="loading">
-        <mat-progress-spinner mode="indeterminate" diameter="20"></mat-progress-spinner>
-      </span>
-      <span *ngIf="!loading">Sign Up</span>
-    </button>
-  </div>
+    <mat-form-field class="signup__form-field">
+      <mat-label>Last Name</mat-label>
+      <input
+        class="signup__input"
+        formControlName="lastName"
+        matInput
+        placeholder="Last Name"
+      />
+      <mat-error
+        class="signup__error"
+        *ngIf="signupForm.get('lastName').invalid"
+        >{{ getErrorMessage(signupForm.get("lastName")) }}</mat-error
+      >
+    </mat-form-field>
+
+    <mat-form-field class="signup__form-field">
+      <mat-label>Enter your email</mat-label>
+      <input
+        class="signup__input"
+        formControlName="email"
+        matInput
+        placeholder="abc@xyz.com"
+        required
+      />
+      <mat-error
+        class="signup__error"
+        *ngIf="signupForm.get('email').invalid"
+        >{{ getErrorMessage(signupForm.get("email")) }}</mat-error
+      >
+    </mat-form-field>
+
+    <mat-form-field class="signup__form-field">
+      <mat-label>Enter your password</mat-label>
+      <input
+        class="signup__input"
+        formControlName="password"
+        matInput
+        [type]="hidePassword ? 'password' : 'text'"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="hidePassword = !hidePassword"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hidePassword"
+      >
+        <mat-icon>{{
+          hidePassword ? "visibility_off" : "visibility"
+        }}</mat-icon>
+      </button>
+      <mat-error
+        class="signup__error"
+        *ngIf="signupForm.get('password').invalid"
+        >{{ getErrorMessage(signupForm.get("password")) }}</mat-error
+      >
+    </mat-form-field>
+
+    <div class="signup__buttons">
+      <button
+        mat-raised-button
+        class="signup__close-button"
+        (click)="closeDialog()"
+      >
+        Cancel
+      </button>
+      <button
+        mat-raised-button
+        class="signup__signup-button"
+        (click)="signup()"
+        [disabled]="loading || !signupForm.valid"
+      >
+        <span *ngIf="loading">
+          <mat-progress-spinner
+            mode="indeterminate"
+            diameter="20"
+          ></mat-progress-spinner>
+        </span>
+        <span *ngIf="!loading">Sign Up</span>
+      </button>
+    </div>
+  </form>
 </div>
