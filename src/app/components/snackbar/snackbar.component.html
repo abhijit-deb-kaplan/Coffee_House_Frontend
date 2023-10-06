@@ -1,0 +1,7 @@
+<div class="snackbar">
+  <mat-icon class="snackbar__icon">{{ snackBarData.icon }}</mat-icon>
+  <span class="snackbar__text">{{ snackBarData.message }}</span>
+  <button mat-button class="snackbar__button" (click)="closeSnackbar()">
+    {{ snackBarData.action }}
+  </button>
+</div>
