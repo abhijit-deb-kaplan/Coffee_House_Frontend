@@ -3,6 +3,8 @@ import { UserApiService } from './services/users/user-api.service';
 import { SnackbarService } from './services/snackbar/snackbar.service';
 import { MatDialog } from '@angular/material/dialog';
 import { LoginDialogComponent } from './components/login-dialog/login-dialog.component';
+import { IUserLoginResponse } from './interfaces/users.interface';
+import { AuthServiceService } from './services/authService/auth-service.service';
 
 @Component({
   selector: 'app-root',
@@ -10,30 +12,36 @@ import { LoginDialogComponent } from './components/login-dialog/login-dialog.com
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
+  userFromDialog: IUserLoginResponse['user'];
+
   title = 'Coffee_House_Frontend';
-  isAuthenticated: boolean = false;
-  username: string = '';
+  isAuthenticated = this.authService.isAuthenticated();
   email: string = '';
 
   constructor(
     private userData: UserApiService,
     public customSnackbar: SnackbarService,
+    public authService: AuthServiceService,
     private dialog: MatDialog
   ) {
     this.userData.isAuthenticated$.subscribe((isAuthenticated) => {
       this.isAuthenticated = isAuthenticated;
     });
-    this.userData.username$.subscribe((username) => {
-      this.username = username;
-    });
+
     this.userData.email$.subscribe((email) => {
       this.email = email;
     });
   }
 
   openLoginDialog(): void {
-    this.dialog.open(LoginDialogComponent, {
+    const dialogRef = this.dialog.open(LoginDialogComponent, {
       width: '380px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.userFromDialog = result.user;
+      }
     });
   }
 

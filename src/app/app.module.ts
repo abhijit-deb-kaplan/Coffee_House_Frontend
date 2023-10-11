@@ -25,6 +25,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialogRef } from '@angular/material/dialog';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     SnackbarComponent,
     LoginDialogComponent,
     SignupDialogComponent,
+    DashboardComponent,
   ],
   imports: [
     BrowserModule,
@@ -53,7 +55,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    MatDialogModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -1,13 +1,25 @@
 <nav class="navbar">
   <div class="navbar__logo">
-    <img class="navbar__logo__image" src="../../assets/coffee_logo.png" alt="logo" />
+    <img
+      class="navbar__logo__image"
+      src="../../assets/coffee_logo.png"
+      alt="logo"
+    />
     <p class="navbar__logo__text">Coffee house</p>
   </div>
 
   <ng-container *ngIf="isAuthenticated">
     <div class="navbar__container">
-      <span class="navbar__container__username">Hi, {{ username }} !</span>
-      <button class="navbar__container__button" mat-raised-button (click)="logout()">
+      <span class="navbar__container__username"
+        >Hi,
+        {{ user?.firstName ? user.firstName + " " + user.lastName : "Guest" }}
+        !</span
+      >
+      <button
+        class="navbar__container__button"
+        mat-raised-button
+        (click)="logout()"
+      >
         Logout
       </button>
     </div>
@@ -15,9 +27,20 @@
 
   <ng-container *ngIf="!isAuthenticated">
     <div class="navbar__auth-btn">
-      <button class="navbar__auth-btn__signup" mat-raised-button (click)="openSignupDialog()">Sign Up</button>
-      <button class="navbar__auth-btn__login" mat-raised-button (click)="openLoginDialog()">Login</button>
+      <button
+        class="navbar__auth-btn__signup"
+        mat-raised-button
+        (click)="openSignupDialog()"
+      >
+        Sign Up
+      </button>
+      <button
+        class="navbar__auth-btn__login"
+        mat-raised-button
+        (click)="loginRequested.emit()"
+      >
+        Login
+      </button>
     </div>
   </ng-container>
-
 </nav>

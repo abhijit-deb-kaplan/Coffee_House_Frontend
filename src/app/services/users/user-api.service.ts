@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { USER_API_URL } from 'src/app/constants/constant';
 import { SnackbarService } from '../snackbar/snackbar.service';
 import {
-  UserLoginRequest,
-  UserLoginResponse,
-  UserSignupRequest,
+  IUser,
+  IUserLoginRequest,
+  IUserLoginResponse,
+  IUserSignupRequest,
 } from 'src/app/interfaces/users.interface';
+import { AuthServiceService } from '../authService/auth-service.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,30 +17,31 @@ import {
 export class UserApiService {
   private apiUrl = USER_API_URL;
   private isAuthenticated = new BehaviorSubject<boolean>(false);
-  private username = new BehaviorSubject<string>('');
   private email = new BehaviorSubject<string>('');
+  private userDetails = new BehaviorSubject<IUser>(null);
+
+  user$ = this.userDetails.asObservable();
 
   constructor(
     private http: HttpClient,
+    private authService: AuthServiceService,
     public customSnackbar: SnackbarService
   ) {}
 
   get isAuthenticated$(): Observable<boolean> {
     return this.isAuthenticated.asObservable();
   }
-  get username$(): Observable<string> {
-    return this.username.asObservable();
-  }
+
   get email$(): Observable<string> {
     return this.email.asObservable();
   }
 
-  signup(signupData: UserSignupRequest): Observable<any> {
+  signup(signupData: IUserSignupRequest): Observable<any> {
     const url = `${this.apiUrl}/signup`;
     return this.http.post(url, signupData);
   }
 
-  login(loginData: UserLoginRequest): Observable<any> {
+  login(loginData: IUserLoginRequest): Observable<any> {
     const url = `${this.apiUrl}/login`;
     return this.http.post(url, loginData);
   }
@@ -47,13 +50,17 @@ export class UserApiService {
     return this.http.post(`${this.apiUrl}/logout`, credentials);
   }
 
-  onSuccessfulLogin(user: UserLoginResponse['user']) {
+  onSuccessfulLogin(user: IUserLoginResponse['user']) {
     this.isAuthenticated.next(true);
-    this.username.next(user.firstName + ' ' + user.lastName);
     this.email.next(user.email);
+    this.userDetails.next(user);
   }
+
   onSuccessfulLogout() {
     this.isAuthenticated.next(false);
-    this.username.next('');
+  }
+
+  updateUser(user: IUserLoginResponse['user']) {
+    this.userDetails.next(user);
   }
 }

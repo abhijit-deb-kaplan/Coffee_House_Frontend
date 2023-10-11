@@ -1,16 +1,28 @@
-.snackbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  
-    &__icon {
-      font-size: 2rem;
-      height: 2rem;
-      width: 2rem;
-      margin-right: 0.5rem;
-    }
-  
-    &__button {
-      color: white;
-    }
+.success-snackbar,
+.error-snackbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  &__icon {
+    font-size: 2rem;
+    height: 2rem;
+    width: 2rem;
+    margin-right: 0.5rem;
   }
+}
+.success-snackbar {
+  &__icon {
+    color: #01dc6a;
+  }
+  &__button {
+    color: #01dc6a !important;
+  }
+}
+.error-snackbar {
+  &__icon {
+    color: #fe3451;
+  }
+  &__button {
+    color: #fe3451 !important;
+  }
+}
