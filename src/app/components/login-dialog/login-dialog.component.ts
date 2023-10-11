@@ -8,15 +8,15 @@ import { MatDialogRef } from '@angular/material/dialog';
 import {
   FormControl,
   Validators,
-  FormsModule,
-  ReactiveFormsModule,
   FormGroup,
   AbstractControl,
 } from '@angular/forms';
 import { UserApiService } from '../../services/users/user-api.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SnackbarService } from '../../services/snackbar/snackbar.service';
-import { UserLoginResponse } from '../../interfaces/users.interface';
+import { IUserLoginResponse } from '../../interfaces/users.interface';
+import { Router } from '@angular/router';
+import { AuthServiceService } from 'src/app/services/authService/auth-service.service';
 
 @Component({
   selector: 'app-login-dialog',
@@ -25,7 +25,7 @@ import { UserLoginResponse } from '../../interfaces/users.interface';
   encapsulation: ViewEncapsulation.None,
 })
 export class LoginDialogComponent {
-  @Output() loginSuccess = new EventEmitter<UserLoginResponse['user']>();
+  @Output() loginSuccess = new EventEmitter<IUserLoginResponse['user']>();
 
   loginForm: FormGroup = new FormGroup({
     email: new FormControl(null, [Validators.required, Validators.email]),
@@ -37,7 +37,9 @@ export class LoginDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<LoginDialogComponent>,
     private apiService: UserApiService,
-    private customSnackbar: SnackbarService
+    private customSnackbar: SnackbarService,
+    private router: Router,
+    private authService: AuthServiceService
   ) {}
 
   getErrorMessage(control: AbstractControl): string {
@@ -70,17 +72,22 @@ export class LoginDialogComponent {
 
     this.loading = true;
 
-
     this.apiService.login(this.loginForm.value).subscribe(
-      (response: UserLoginResponse) => {
+      (response: IUserLoginResponse) => {
         this.customSnackbar.openSuccessSnackbar('Login successful!', 'Close');
         this.loading = false;
+
         this.apiService.onSuccessfulLogin(response.user);
-        this.loginSuccess.emit(response.user);
+
+        this.authService.setToken(response.token);
+        this.router.navigate(['/dashboard']);
+
+        this.apiService.updateUser(response.user);
+
+        localStorage.setItem('user', JSON.stringify(response.user));
 
         this.dialogRef.close({
-          name: 'dummy',
-          passowrd: 'fake-pass',
+          user: response.user,
         });
       },
 

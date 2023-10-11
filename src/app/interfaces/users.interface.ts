@@ -1,4 +1,4 @@
-export interface UserLoginResponse {
+export interface IUserLoginResponse {
   success: boolean;
   user: {
     id: string;
@@ -6,20 +6,28 @@ export interface UserLoginResponse {
     lastName: string;
     email: string;
   };
+  token: string;
 }
 
-export interface UserSignupResponse {
+export interface IUserSignupResponse {
   success: boolean;
 }
 
-export interface UserSignupRequest {
+export interface IUserSignupRequest {
   firstName: string;
   lastName: string;
   email: string;
   password: string;
 }
 
-export interface UserLoginRequest {
+export interface IUserLoginRequest {
   email: string;
   password: string;
+}
+
+export interface IUser {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
 }

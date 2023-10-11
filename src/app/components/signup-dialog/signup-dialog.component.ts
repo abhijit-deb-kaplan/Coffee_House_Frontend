@@ -9,7 +9,7 @@ import {
 import { UserApiService } from '../../services/users/user-api.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SnackbarService } from '../../services/snackbar/snackbar.service';
-import { UserSignupResponse } from '../../interfaces/users.interface';
+import { IUserSignupResponse } from '../../interfaces/users.interface';
 
 @Component({
   selector: 'app-signup-dialog',
@@ -18,8 +18,6 @@ import { UserSignupResponse } from '../../interfaces/users.interface';
   encapsulation: ViewEncapsulation.None,
 })
 export class SignupDialogComponent {
-
-
   signupForm: FormGroup = new FormGroup({
     firstName: new FormControl(null, [Validators.required]),
     lastName: new FormControl(null, [Validators.required]),
@@ -43,7 +41,6 @@ export class SignupDialogComponent {
     if (control.hasError('required')) {
       return `${this.getFieldName(control)} is required`;
     }
-
     return control.hasError('pattern') ? 'Not a valid email' : '';
   }
 
@@ -70,7 +67,7 @@ export class SignupDialogComponent {
 
       // Calling Api for signup
       this.apiService.signup(this.signupForm.value).subscribe(
-        (response: UserSignupResponse) => {
+        (response: IUserSignupResponse) => {
           this.customSnackbar.openSuccessSnackbar(
             'Signup successful!',
             'Close'

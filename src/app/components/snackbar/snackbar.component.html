@@ -1,7 +1,13 @@
-<div class="snackbar">
-  <mat-icon class="snackbar__icon">{{ snackBarData.icon }}</mat-icon>
-  <span class="snackbar__text">{{ snackBarData.message }}</span>
-  <button mat-button class="snackbar__button" (click)="closeSnackbar()">
+<div class="{{ snackBarData.class }}">
+  <mat-icon class="{{ snackBarData.class }}__icon">{{
+    snackBarData.icon
+  }}</mat-icon>
+  <span class="{{ snackBarData.class }}__text">{{ snackBarData.message }}</span>
+  <button
+    mat-button
+    class="{{ snackBarData.class }}__button"
+    (click)="closeSnackbar()"
+  >
     {{ snackBarData.action }}
   </button>
 </div>

@@ -8,6 +8,7 @@
 
   <form [formGroup]="signupForm" (ngSubmit)="signup()" class="signup__form">
     <mat-form-field class="signup__form-field">
+      <!-- First Name -->
       <mat-label>First Name</mat-label>
       <input
         class="signup__input"
@@ -22,6 +23,7 @@
       >
     </mat-form-field>
 
+    <!-- Last Name -->
     <mat-form-field class="signup__form-field">
       <mat-label>Last Name</mat-label>
       <input
@@ -37,6 +39,7 @@
       >
     </mat-form-field>
 
+    <!-- Email -->
     <mat-form-field class="signup__form-field">
       <mat-label>Enter your email</mat-label>
       <input
@@ -53,6 +56,7 @@
       >
     </mat-form-field>
 
+    <!-- Password -->
     <mat-form-field class="signup__form-field">
       <mat-label>Enter your password</mat-label>
       <input
@@ -79,6 +83,7 @@
       >
     </mat-form-field>
 
+    <!-- Cancel Button -->
     <div class="signup__buttons">
       <button
         mat-raised-button
@@ -87,6 +92,8 @@
       >
         Cancel
       </button>
+
+      <!-- Sign Up Button -->
       <button
         mat-raised-button
         class="signup__signup-button"

@@ -1,11 +1,10 @@
 <div class="app-container">
   <app-navbar
     [isAuthenticated]="isAuthenticated"
-    [username]="username"
     (loginRequested)="openLoginDialog()"
     (logoutRequested)="logout()"
   >
   </app-navbar>
 
-  <app-homepage></app-homepage>
+  <router-outlet></router-outlet>
 </div>
